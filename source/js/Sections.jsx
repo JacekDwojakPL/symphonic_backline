@@ -13,13 +13,30 @@ class Sections extends Component {
     });
   }
   render() {
-    return (
-      <div className="sections-div">
-        {this.state.sections.map(element => (
-          <Section key={element.id} nazwa={element.nazwa} opis={element.opis} />
-        ))}
-      </div>
-    );
+    const Sections = this.state.sections.map(element => {
+      if (this.props.currentLang === "Polski") {
+        return (
+          <Section
+            key={element.id}
+            name={element.nazwa}
+            description={element.opis}
+            currentLang={this.props.currentLang}
+            sectionId={element.id}
+          />
+        );
+      } else {
+        return (
+          <Section
+            key={element.id}
+            name={element.name}
+            description={element.description}
+            currentLang={this.props.currentLang}
+            sectionId={element.id}
+          />
+        );
+      }
+    });
+    return <div className="sections-div">{Sections}</div>;
   }
 }
 export default Sections;
