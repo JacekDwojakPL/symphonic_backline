@@ -3,7 +3,8 @@ import axios from "axios";
 
 class Instruments extends Component {
   state = {
-    instruments: []
+    instruments: [],
+    instrumentId: null
   };
   componentDidMount() {
     axios.get("/api/get_instruments").then(response => {
@@ -15,7 +16,17 @@ class Instruments extends Component {
     const single_instrument = this.state.instruments.filter(element => {
       return element.id === parseInt(id);
     });
+
+    this.setState({ instrumentId: single_instrument[0].id });
     this.props.handleChangeDescription(single_instrument);
+  }
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.currentLang !== prevProps.currentLang &&
+      this.state.instrumentId != null
+    ) {
+      this.handleChangeDescription(this.state.instrumentId);
+    }
   }
 
   render() {

@@ -17,8 +17,12 @@ class Landing extends Component {
 
   render() {
     return (
-      <div className={`pt-6 pb-6 ${this.state.results.nazwa}`}>
-        <p>{this.state.results.opis}</p>
+      <div className={`${this.state.results.nazwa} pt-6 pb-6`}>
+        <p>
+          {this.props.currentLang === "Polski"
+            ? `${this.state.results.opis}`
+            : `${this.state.results.description}`}
+        </p>
       </div>
     );
   }

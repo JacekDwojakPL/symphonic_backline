@@ -1,5 +1,71 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+
+body {
+  color: white !important;
+}
+
+$body-bg: #120d08;
+$body-color: #111;
+$theme-colors: (
+  "primary": #f2e3cf
+);
+
+$font-family-sans-serif: "Montserrat", Roboto, "Helvetica Neue", Arial,
+  sans-serif;
+
+$spacer: 1rem !default;
+$spacers: () !default;
+$spacers: map-merge(
+  (
+    0: 0,
+    1: (
+      $spacer * 0.25
+    ),
+    2: (
+      $spacer * 0.5
+    ),
+    3: $spacer,
+    4: (
+      $spacer * 1.5
+    ),
+    5: (
+      $spacer * 3
+    ),
+    6: (
+      $spacer * 9
+    )
+  ),
+  $spacers
+);
+
+$dropdown-bg: none;
+$dropdown-link-color: #f2e3cf;
+$dropdown-link-hover-color: black;
+$dropdown-link-hover-bg: #f2e3cf;
+
 .id-input {
   width: 45px;
 }
-$body-bg: #ededed;
+
+#section1 {
+  background: url("../img/background/background1.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 60%;
+  color: white;
+}
+#section2 {
+  background: url("../img/background/background2.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 60%;
+  color: white;
+}
+#section3 {
+  background: url("../img/background/background3.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 60%;
+  color: white;
+}
 @import "node_modules/bootstrap/scss/bootstrap.scss";
