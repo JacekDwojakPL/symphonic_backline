@@ -28,7 +28,6 @@ def edit_sections():
     opis = request.form.get("opis")
     description = request.form.get("description")
     instrumentSection = 1 if request.form.get("instrumentSection") == "on" else 0
-    print(instrumentSection)
 
     db.execute("UPDATE sections SET nazwa=:nazwa, name=:name, opis=:opis, description=:description, instrumentSection=:instrumentSection WHERE id=:id",
                 {"nazwa": nazwa, "name": name, "opis": opis, "description": description, "instrumentSection": int(instrumentSection), "id": int(id)})
