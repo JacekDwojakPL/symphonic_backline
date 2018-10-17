@@ -1,14 +1,18 @@
 import os
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import Flask, render_template, request, jsonify, redirect, url_for
+from models import *
+from helpers import to_dict
 
 path = os.path.abspath("./")
-url = os.path.join(path, "data.db")
-engine = create_engine("sqlite:///"+url)
-db = scoped_session(sessionmaker(bind=engine))
+db_path = os.path.join(path, "data2.db")
+
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db.init_app(app)
+
 
 @app.route("/")
 def main():
@@ -16,9 +20,9 @@ def main():
 
 @app.route("/admin")
 def admin():
-    sections = db.execute("SELECT * FROM 'sections'").fetchall()
-    instruments = db.execute("SELECT * FROM 'instruments'").fetchall()
-    db.commit()
+
+    sections = Section.query.all()
+    instruments = Instrument.query.all()
     return render_template("admin.html", sections=sections, instruments=instruments)
 
 @app.route("/edit_sections", methods=["POST"])
@@ -30,9 +34,15 @@ def edit_sections():
     description = request.form.get("description")
     instrumentSection = 1 if request.form.get("instrumentSection") == "on" else 0
 
-    db.execute("UPDATE sections SET nazwa=:nazwa, name=:name, opis=:opis, description=:description, instrumentSection=:instrumentSection WHERE id=:id",
-                {"nazwa": nazwa, "name": name, "opis": opis, "description": description, "instrumentSection": int(instrumentSection), "id": int(id)})
-    db.commit()
+    section_to_edit = Section.query.get(int(id))
+    section_to_edit.nazwa = nazwa
+    section_to_edit.name = name
+    section_to_edit.opis = opis
+    section_to_edit.description = description
+    section_to_edit.instrumentSection = instrumentSection
+    db.session.add(section_to_edit)
+    db.session.commit()
+
     return redirect(url_for('admin'))
 
 @app.route("/add_sections", methods=["POST"])
@@ -45,9 +55,9 @@ def add_sections():
     # okreslenie czy sekcja dotyczy instrumentow, aby poprawnie umiescic ja w nawigacji
     instrumentSection = 1 if request.form.get("instrumentSection") == "on" else 0
 
-    db.execute("INSERT INTO sections (nazwa, name, opis, description, instrumentSection) VALUES (:nazwa, :name, :opis, :description, :instrumentSection)",
-    {"nazwa": nazwa, "name": name, "opis": opis, "description": description, "instrumentSection": int(instrumentSection)})
-    db.commit()
+    new_section = Section(nazwa=nazwa, name=name, opis=opis, description=description, instrumentSection=instrumentSection)
+    db.session.add(new_section)
+    db.session.commit()
 
     return redirect(url_for("admin"))
 
@@ -62,43 +72,54 @@ def add_instrument():
     # okreslenie ID sekcji w danych, aby poprawnie przypisywach instrument do kategorii
     section_id = request.form.get("section_id")
 
-    db.execute("INSERT INTO instruments (nazwa, name, opis, description, section_id) VALUES (:nazwa, :name, :opis, :description, :section_id)",
-    {"nazwa": nazwa, "name": name, "opis": opis, "description": description, "section_id": int(section_id)})
-    db.commit()
+    new_instrument = Instrument(nazwa=nazwa, name=name, opis=opis, description=description, section_id=section_id)
+    db.session.add(new_instrument)
+    db.session.commit()
+
     return redirect(url_for("admin"))
 
 @app.route("/delete_instrument", methods=["POST"])
 def delete_instrument():
     id = int(request.form.get("id"))
-    db.execute("DELETE FROM instruments WHERE id=:id", {"id": id})
-    db.commit()
+    #db.execute("DELETE FROM instruments WHERE id=:id", {"id": id})
+    #db.commit()
+    instrument_to_delete = Instrument.query.get(id)
+    db.session.delete(instrument_to_delete)
+    db.session.commit()
+
     return redirect(url_for("admin"))
 
 @app.route("/api/get_links")
 def get_links():
-    links = db.execute("SELECT nazwa, name, instrumentSection FROM 'sections'").fetchall()
-    db.commit()
-    output = [dict(row) for row in links]
-    return (jsonify(output))
+    links = Section.query.all()
+    output = to_dict(links)
 
+    return (jsonify(output))
 
 @app.route("/api/get_sections")
 def get_sections():
-    sections = db.execute("SELECT * FROM 'sections'").fetchall()
-    db.commit()
-    output = [dict(row) for row in sections]
+    sections = Section.query.all()
+    output = to_dict(sections)
+
     return jsonify(output)
 
 @app.route("/api/get_instruments")
 def get_instruments():
-    instruments = db.execute("SELECT * FROM 'instruments'").fetchall()
-    db.commit()
-    output = [dict(row) for row in instruments]
+    instruments = Instrument.query.all()
+    output = to_dict(instruments)
+
     return jsonify(output)
 
 @app.route("/api/get_landing")
 def get_landing():
-    landing = db.execute("SELECT * FROM 'landing'").fetchall()
-    db.commit()
-    output = [dict(row) for row in landing]
+    landing = Landing.query.all()
+    output = to_dict(landing)
+
     return jsonify(output)
+
+def create_database():
+    db.create_all()
+
+if __name__ == "__main__":
+    with app.app_context():
+        create_database()
