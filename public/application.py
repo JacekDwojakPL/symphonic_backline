@@ -18,6 +18,7 @@ def main():
 def admin():
     sections = db.execute("SELECT * FROM 'sections'").fetchall()
     instruments = db.execute("SELECT * FROM 'instruments'").fetchall()
+    db.commit()
     return render_template("admin.html", sections=sections, instruments=instruments)
 
 @app.route("/edit_sections", methods=["POST"])
@@ -76,6 +77,7 @@ def delete_instrument():
 @app.route("/api/get_links")
 def get_links():
     links = db.execute("SELECT nazwa, name, instrumentSection FROM 'sections'").fetchall()
+    db.commit()
     output = [dict(row) for row in links]
     return (jsonify(output))
 
@@ -83,17 +85,20 @@ def get_links():
 @app.route("/api/get_sections")
 def get_sections():
     sections = db.execute("SELECT * FROM 'sections'").fetchall()
+    db.commit()
     output = [dict(row) for row in sections]
     return jsonify(output)
 
 @app.route("/api/get_instruments")
 def get_instruments():
     instruments = db.execute("SELECT * FROM 'instruments'").fetchall()
+    db.commit()
     output = [dict(row) for row in instruments]
     return jsonify(output)
 
 @app.route("/api/get_landing")
 def get_landing():
     landing = db.execute("SELECT * FROM 'landing'").fetchall()
+    db.commit()
     output = [dict(row) for row in landing]
     return jsonify(output)
