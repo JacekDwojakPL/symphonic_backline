@@ -14,7 +14,7 @@ class Links extends Component {
   render() {
     const list = this.state.content
       .filter(element => {
-        return element.instrumentSection === 0;
+        return element.instrumentSection === false;
       })
       .map(element => {
         return (
@@ -30,7 +30,7 @@ class Links extends Component {
 
     const dropdown = this.state.content
       .filter(element => {
-        return element.instrumentSection === 1;
+        return element.instrumentSection === true;
       })
       .map(element => {
         return (
