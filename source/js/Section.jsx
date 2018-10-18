@@ -50,7 +50,7 @@ class Section extends Component {
                 <h4 className="text-uppercase text-center text-md-left mb-4 mb-sm-1">
                   {this.state.instrument_name}
                 </h4>
-                <p className="text-center text-md-left pt-4 pb-4">
+                <p className="instrument-description-paragraph text-center text-md-left pt-4 pb-4">
                   {this.state.showInstrument === true
                     ? `${this.state.description}`
                     : `${this.props.description}`}

@@ -106,5 +106,14 @@ $dropdown-link-hover-bg: #f2e3cf;
     color: white !important;
   }
 }
+.nav-item,
+.dropdown-item {
+  cursor: pointer;
+}
+
+.landing-content,
+.instrument-description-paragraph {
+  white-space: pre-wrap;
+}
 
 @import "node_modules/bootstrap/scss/bootstrap.scss";

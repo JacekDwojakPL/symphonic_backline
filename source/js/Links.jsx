@@ -11,6 +11,11 @@ class Links extends Component {
     });
   }
 
+  scroll_to_section(id) {
+    const target_element = document.getElementById(`section${id}`);
+    target_element.scrollIntoView({ behavior: "smooth" });
+  }
+
   render() {
     const list = this.state.content
       .filter(element => {
@@ -19,11 +24,16 @@ class Links extends Component {
       .map(element => {
         return (
           <li className="nav-item">
-            <a className="nav-link active" href="#">
+            <span
+              className="nav-link active"
+              onClick={() => {
+                this.scroll_to_section(element.id);
+              }}
+            >
               {this.props.currentLang === "Polski"
                 ? `${element.nazwa}`
                 : `${element.name}`}
-            </a>
+            </span>
           </li>
         );
       });
@@ -34,11 +44,16 @@ class Links extends Component {
       })
       .map(element => {
         return (
-          <a className="dropdown-item" href="#">
+          <span
+            className="dropdown-item"
+            onClick={event => {
+              this.scroll_to_section(element.id);
+            }}
+          >
             {this.props.currentLang === "Polski"
               ? `${element.nazwa}`
               : `${element.name}`}
-          </a>
+          </span>
         );
       });
 

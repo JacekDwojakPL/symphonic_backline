@@ -29,7 +29,7 @@ class Landing extends Component {
               </h4>
             </div>
           </div>
-          <p className="text-center text-md-left pt-5 pb-5">
+          <p className="landing-content text-center text-md-left pt-5 pb-5">
             {this.props.currentLang === "Polski"
               ? `${this.state.results.opis}`
               : `${this.state.results.description}`}

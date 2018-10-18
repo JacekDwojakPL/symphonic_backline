@@ -37,17 +37,16 @@ class Instruments extends Component {
       .map(element => {
         return (
           <li className="nav-item">
-            <a
+            <span
               className="nav-link"
               onClick={() => {
                 this.handleChangeDescription(`${element.id}`);
               }}
-              href="#"
             >
               {this.props.currentLang === "Polski"
                 ? `${element.nazwa}`
                 : `${element.name}`}
-            </a>
+            </span>
           </li>
         );
       });
