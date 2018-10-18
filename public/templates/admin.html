@@ -8,7 +8,24 @@
     <title>Symphonic Backline &middot Admin</title>
   </head>
   <body>
-    <div class="container-fluid">
+    <!-- edycja nagłówka -->
+    <div class="container">
+      <div class="container-fluid bg-warning pb-4">
+        <div class="row pt-2 pb-2 text-center">
+          <div class="col"><h2>Edytuj nagłówek i główny opis</h2></div>
+        </div>
+          <div class="row pt-2 pb-2">
+            <form action="/edit_landing" method="POST">
+              <div class="row">
+              <div class="col"><input type="text" name="nazwa" value="{{landing.nazwa}}" required></div>
+              <div class="col"><input type="text" name="name" value="{{landing.name}}" required></div>
+              <div class="col"><textarea class="form-control" name="opis" rows=5 placeholder="opis"required>{{landing.opis}}</textarea></div>
+              <div class="col"><textarea class="form-control" name="description" rows=5 placeholder="description" required>{{landing.description}}</textarea></div>
+              <div class="col"><button class="btn btn-info" type="submit">Edytuj</button></div>
+            </div>
+            </form>
+          </div>
+        </div>
       <!-- dodawanie nowej sekcji -->
       <div class="container-fluid bg-success pb-4">
       <div class="row pt-5 pb-5 text-center">
@@ -16,7 +33,7 @@
       </div>
         <div class="row pt-2 pb-2">
         <form action="/add_sections" method="POST">
-          <table class="table table-success mb-0">
+          <table class="table mb-0">
             <tr>
               <td><input type="text" placeholder="nazwa" value="" name="nazwa" required/></td>
               <td><input type="text" placeholder="name" value="" name="name" required/></td>
@@ -38,7 +55,7 @@
             {% for section in sections %}
             <div class="row">
               <form action="/edit_sections" method="POST">
-                <table class="table table-warning mb-0">
+                <table class="table mb-0">
                   <tr>
                     <td><input type="hidden" value="{{section.id}}" name="id" required hidden/></td>
                     <td>{{section.id}}.</td>

@@ -5,7 +5,7 @@ from models import *
 from helpers import to_dict
 
 path = os.path.abspath("./")
-db_path = os.path.join(path, "data2.db")
+db_path = os.path.join(path, "data.db")
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
@@ -23,7 +23,42 @@ def admin():
 
     sections = Section.query.all()
     instruments = Instrument.query.all()
-    return render_template("admin.html", sections=sections, instruments=instruments)
+    landing = Landing.query.first()
+    return render_template("admin.html", sections=sections, instruments=instruments, landing=landing)
+
+@app.route("/edit_landing", methods=["POST"])
+def edit_landing():
+    nazwa = request.form.get("nazwa")
+    name = request.form.get("name")
+    opis = request.form.get("opis")
+    description = request.form.get("description")
+
+    landing = Landing.query.first()
+    landing.nazwa = nazwa
+    landing.name = name
+    landing.opis = opis
+    landing.description = description
+
+    db.session.add(landing)
+    db.session.commit()
+
+    return redirect(url_for("admin"))
+
+@app.route("/add_sections", methods=["POST"])
+def add_sections():
+    # dodawanie nowych sekcji do bazy danych
+    nazwa = request.form.get("nazwa")
+    name = request.form.get("name")
+    opis = request.form.get("opis")
+    description = request.form.get("description")
+    # okreslenie czy sekcja dotyczy instrumentow, aby poprawnie umiescic ja w nawigacji
+    instrumentSection = 1 if request.form.get("instrumentSection") == "on" else 0
+
+    new_section = Section(nazwa=nazwa, name=name, opis=opis, description=description, instrumentSection=instrumentSection)
+    db.session.add(new_section)
+    db.session.commit()
+
+    return redirect(url_for("admin"))
 
 @app.route("/edit_sections", methods=["POST"])
 def edit_sections():
@@ -44,23 +79,6 @@ def edit_sections():
     db.session.commit()
 
     return redirect(url_for('admin'))
-
-@app.route("/add_sections", methods=["POST"])
-def add_sections():
-    # dodawanie nowych sekcji do bazy danych
-    nazwa = request.form.get("nazwa")
-    name = request.form.get("name")
-    opis = request.form.get("opis")
-    description = request.form.get("description")
-    # okreslenie czy sekcja dotyczy instrumentow, aby poprawnie umiescic ja w nawigacji
-    instrumentSection = 1 if request.form.get("instrumentSection") == "on" else 0
-
-    new_section = Section(nazwa=nazwa, name=name, opis=opis, description=description, instrumentSection=instrumentSection)
-    db.session.add(new_section)
-    db.session.commit()
-
-    return redirect(url_for("admin"))
-
 
 @app.route("/add_instrument", methods=["POST"])
 def add_instrument():

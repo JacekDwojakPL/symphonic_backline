@@ -19,7 +19,7 @@ class Links extends Component {
       .map(element => {
         return (
           <li className="nav-item">
-            <a className="nav-link" href="#">
+            <a className="nav-link active" href="#">
               {this.props.currentLang === "Polski"
                 ? `${element.nazwa}`
                 : `${element.name}`}
@@ -43,7 +43,7 @@ class Links extends Component {
       });
 
     return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-primary">
+      <nav className="navbar navbar-expand-lg navbar-dark">
         <a className="navbar-brand" href="/">
           Symphonic Backline
         </a>
@@ -59,10 +59,10 @@ class Links extends Component {
           className="collapse navbar-collapse"
           id="symphonic_backline_navbar"
         >
-          <ul className="navbar-nav mr-auto">
+          <ul className="navbar-nav ml-auto">
             <li className="nav-item dropdown">
               <a
-                className="nav-link dropdown-toggle"
+                className="nav-link active dropdown-toggle"
                 href="#"
                 id="symphonic_backline_navbar_dropdown"
                 role="button"
@@ -77,7 +77,7 @@ class Links extends Component {
             {list}
             <li className="nav-item">
               <a
-                className="nav-link"
+                className="nav-link active"
                 href="#"
                 onClick={this.props.changeLanguage}
               >

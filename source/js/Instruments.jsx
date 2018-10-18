@@ -42,6 +42,7 @@ class Instruments extends Component {
               onClick={() => {
                 this.handleChangeDescription(`${element.id}`);
               }}
+              href="#"
             >
               {this.props.currentLang === "Polski"
                 ? `${element.nazwa}`
