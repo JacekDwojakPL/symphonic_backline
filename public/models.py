@@ -29,3 +29,9 @@ class Landing(db.Model):
     name = db.Column(db.String, nullable=False)
     opis = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
+
+class Users(db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Integer, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)

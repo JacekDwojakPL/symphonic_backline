@@ -35,11 +35,7 @@ body {
 
 .navbar {
   width: 100%;
-  background: none !important; }
-
-@media (max-width: 34em) {
-  .navbar {
-    background: black !important; } }
+  background: black !important; }
 
 .navbar .navbar-toggler {
   cursor: pointer;

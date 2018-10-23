@@ -1,6 +1,7 @@
 import os
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session
+from passlib.hash import pbkdf2_sha256
 from models import *
 from helpers import to_dict
 
@@ -10,6 +11,7 @@ db_path = os.path.join(path, "data.db")
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 db.init_app(app)
 
@@ -18,13 +20,32 @@ db.init_app(app)
 def main():
     return render_template("index.html")
 
-@app.route("/admin")
-def admin():
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
+    elif request.method == "POST":
+        admin = Users.query.first()
+        password = request.form.get("password")
+        hash = admin.password_hash
+        if pbkdf2_sha256.verify(password, hash) and request.form.get("name") == "admin":
+            session["admin"] = True
+            return redirect(url_for("admin"))
+        else:
+            flash("Nieprawidłowa nazwa użytkownika lub hasło")
+            return redirect(url_for("login"))
 
-    sections = Section.query.all()
-    instruments = Instrument.query.all()
-    landing = Landing.query.first()
-    return render_template("admin.html", sections=sections, instruments=instruments, landing=landing)
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if request.method == "GET" and "admin" in session:
+        sections = Section.query.all()
+        instruments = Instrument.query.all()
+        landing = Landing.query.first()
+        return render_template("admin.html", sections=sections, instruments=instruments, landing=landing)
+    else:
+        return redirect(url_for("login"))
+
 
 @app.route("/edit_landing", methods=["POST"])
 def edit_landing():
